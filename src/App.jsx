@@ -12,16 +12,15 @@ import Admin from "./layouts/Admin.jsx";
 
 // Donor
 import DonorDashboard from './pages/donor/Dashboard';
-import DonorRegistrationForm from './components/forms/DonorRegistrationForm';
 
 // Recipient
 import RecipientDashboard from './pages/recipient/Dashboard';
-import RecipientRegistrationForm from './components/forms/RecipientRegistrationForm';
 
 // Volunteer
 import VolunteerDashboard from './pages/volunteer/Dashboard';
-import VolunteerRegistrationForm from './components/forms/VolunteerRegistrationForm';
+
 import Login from './pages/Login';
+import Register from './pages/Register';
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from './context/AuthContext';
 
@@ -59,18 +58,16 @@ function App() {
 
           {/* Donor */}
           <Route path="/donor/dashboard" element={<ProtectedRoute roles={['donor']}><DonorDashboard /></ProtectedRoute>} />
-          <Route path="/register/donor" element={<DonorRegistrationForm />} />
 
           {/* Recipient */}
           <Route path="/recipient/dashboard" element={<ProtectedRoute roles={['recipient']}><RecipientDashboard /></ProtectedRoute>} />
-          <Route path="/register/recipient" element={<RecipientRegistrationForm />} />
 
           {/* Volunteer */}
           <Route path="/volunteer/dashboard" element={<ProtectedRoute roles={['volunteer']}><VolunteerDashboard /></ProtectedRoute>} />
-          <Route path="/register/volunteer" element={<VolunteerRegistrationForm />} />
 
           {/* Auth */}
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
           {/* Add other routes here */}
         </Routes>

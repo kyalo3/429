@@ -1,9 +1,40 @@
-import React from "react";
-
-// components
+import React, { useState, useEffect, useContext } from "react";
 import CardStats from "../../components/Cards/CardStats.jsx";
+import DataTable from "../../components/Tables/DataTable.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
 
 export default function Dashboard() {
+  const [myEvents, setMyEvents] = useState([]);
+  const { token, user } = useContext(AuthContext);
+
+  const availableDrivesHeaders = ["Campaign", "Location", "Date", ""];
+  const myScheduleHeaders = ["Campaign", "Location", "Date", "Role"];
+
+  // Placeholder data
+  const availableDrivesData = [
+    {
+      campaign: "Community Food Bank",
+      location: "Mombasa",
+      date: "Nov 20, 2025",
+      action: <button className="bg-emerald-500 text-white active:bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">Sign Up</button>,
+    },
+    {
+      campaign: "Holiday Meals Drive",
+      location: "Kisumu",
+      date: "Dec 15, 2025",
+      action: <button className="bg-emerald-500 text-white active:bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">Sign Up</button>,
+    },
+  ];
+
+  const myScheduleData = [
+    {
+      campaign: "Neighborhood Pantry",
+      location: "Nairobi",
+      date: "Nov 18, 2025",
+      role: "Distribution",
+    },
+  ];
+
   return (
     <>
       {/* Header */}
@@ -15,7 +46,7 @@ export default function Dashboard() {
               <div className="w-full lg:w-6/12 xl:w-4/12 px-4">
                 <CardStats
                   statSubtitle="UPCOMING EVENTS"
-                  statTitle="2"
+                  statTitle={myScheduleData.length.toString()}
                   statArrow="up"
                   statPercent="1"
                   statPercentColor="text-emerald-500"
@@ -55,38 +86,19 @@ export default function Dashboard() {
       <div className="px-4 md:px-10 mx-auto w-full -m-24">
         <div className="flex flex-wrap mt-4">
           <div className="w-full mb-12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
-              <div className="rounded-t mb-0 px-4 py-3 border-0">
-                <div className="flex flex-wrap items-center">
-                  <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-                    <h3 className="font-semibold text-lg text-slate-700">
-                      Available Food Drives
-                    </h3>
-                  </div>
-                </div>
-              </div>
-              <div className="block w-full overflow-x-auto">
-                {/* Placeholder for table of available drives */}
-                <p className="p-4">A table of available food drives will go here.</p>
-              </div>
-            </div>
+            <DataTable
+              title="Available Food Drives"
+              headers={availableDrivesHeaders}
+              data={availableDrivesData}
+            />
           </div>
           <div className="w-full mb-12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
-              <div className="rounded-t mb-0 px-4 py-3 border-0">
-                <div className="flex flex-wrap items-center">
-                  <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-                    <h3 className="font-semibold text-lg text-slate-700">
-                      My Upcoming Schedule
-                    </h3>
-                  </div>
-                </div>
-              </div>
-              <div className="block w-full overflow-x-auto">
-                {/* Placeholder for table of volunteer's schedule */}
-                <p className="p-4">A table of the volunteer's upcoming events will go here.</p>
-              </div>
-            </div>
+            <DataTable
+              title="My Upcoming Schedule"
+              headers={myScheduleHeaders}
+              data={myScheduleData}
+              color="dark"
+            />
           </div>
         </div>
       </div>

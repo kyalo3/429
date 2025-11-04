@@ -1,9 +1,56 @@
-import React from "react";
-
-// components
+import React, { useState, useEffect, useContext } from "react";
 import CardStats from "../../components/Cards/CardStats.jsx";
+import DataTable from "../../components/Tables/DataTable.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
 
 export default function Dashboard() {
+  const [donations, setDonations] = useState([]);
+  const { token, user } = useContext(AuthContext);
+
+  const donationHeaders = ["ID", "Type", "Quantity", "Status", "Date"];
+  const opportunitiesHeaders = ["Campaign", "Items Needed", "Location", ""];
+
+  useEffect(() => {
+    const fetchDonations = async () => {
+      if (user && user.id) {
+        try {
+          const response = await fetch(
+            `http://localhost:8000/donations/donor/${user.id}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          if (response.ok) {
+            const data = await response.json();
+            setDonations(data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch donations:", error);
+        }
+      }
+    };
+
+    fetchDonations();
+  }, [token, user]);
+
+  const donationData = donations.map((d) => ({
+    id: d.id,
+    type: d.donation_type,
+    quantity: d.quantity,
+    status: d.status,
+    date: new Date(d.created_at).toLocaleDateString(),
+  }));
+
+  // Placeholder data for opportunities
+  const opportunitiesData = [
+    {
+      campaign: "Winter Coat Drive",
+      items: "Coats, Jackets",
+      location: "Nairobi CBD",
+      action: <button className="bg-emerald-500 text-white active:bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">Donate</button>,
+    },
+  ];
+
   return (
     <>
       {/* Header */}
@@ -15,7 +62,7 @@ export default function Dashboard() {
               <div className="w-full lg:w-6/12 xl:w-4/12 px-4">
                 <CardStats
                   statSubtitle="TOTAL DONATIONS"
-                  statTitle="32"
+                  statTitle={donations.length.toString()}
                   statArrow="up"
                   statPercent="12"
                   statPercentColor="text-emerald-500"
@@ -27,7 +74,7 @@ export default function Dashboard() {
               <div className="w-full lg:w-6/12 xl:w-4/12 px-4">
                 <CardStats
                   statSubtitle="PENDING PICKUPS"
-                  statTitle="3"
+                  statTitle={donations.filter(d => d.status === 'pending').length.toString()}
                   statArrow="down"
                   statPercent="2"
                   statPercentColor="text-red-500"
@@ -56,46 +103,19 @@ export default function Dashboard() {
       <div className="px-4 md:px-10 mx-auto w-full -m-24">
         <div className="flex flex-wrap mt-4">
           <div className="w-full mb-12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
-              <div className="rounded-t mb-0 px-4 py-3 border-0">
-                <div className="flex flex-wrap items-center">
-                  <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-                    <h3 className="font-semibold text-lg text-slate-700">
-                      My Donation History
-                    </h3>
-                  </div>
-                  <div className="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
-                    <button
-                      className="bg-emerald-500 text-white active:bg-emerald-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                      type="button"
-                    >
-                      See all
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="block w-full overflow-x-auto">
-                {/* Placeholder for table of donation history */}
-                <p className="p-4">A table of donation history will go here.</p>
-              </div>
-            </div>
+            <DataTable
+              title="My Donation History"
+              headers={donationHeaders}
+              data={donationData}
+            />
           </div>
           <div className="w-full mb-12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
-              <div className="rounded-t mb-0 px-4 py-3 border-0">
-                <div className="flex flex-wrap items-center">
-                  <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-                    <h3 className="font-semibold text-lg text-slate-700">
-                      New Donation Opportunities
-                    </h3>
-                  </div>
-                </div>
-              </div>
-              <div className="block w-full overflow-x-auto">
-                {/* Placeholder for table of new donation opportunities */}
-                <p className="p-4">A table of available donation drives will go here.</p>
-              </div>
-            </div>
+            <DataTable
+              title="New Donation Opportunities"
+              headers={opportunitiesHeaders}
+              data={opportunitiesData}
+              color="dark"
+            />
           </div>
         </div>
       </div>

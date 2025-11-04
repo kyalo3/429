@@ -35,7 +35,7 @@ export default function Landing() {
                     compliance, and reduce emissions all within one platform.
                   </p>
                   <a
-                    href="/register/donor"
+                    href="/register"
                     className="mt-8 inline-block text-white font-bold px-6 py-4 rounded-md outline-none focus:outline-none mr-1 mb-1 bg-orange-500 active:bg-orange-600 uppercase text-sm shadow hover:shadow-lg ease-linear transition-all duration-150"
                   >
                     Let's Connect
